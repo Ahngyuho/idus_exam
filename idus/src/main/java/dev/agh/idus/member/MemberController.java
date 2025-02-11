@@ -46,16 +46,16 @@ public class MemberController {
                                                                @RequestParam(required = false) String email) {
         return ResponseEntity.ok(PageResponse.from(memberService.getList(page, size, username, email) , MemberDto.MemberResponse::fromEntity));
     }
-//
-//    @Operation(summary = "로그아웃", description = "로그아웃 기능 입니다.")
-//    @PostMapping("/logout")
-//    public void logout(HttpServletResponse response) {
-//        Cookie cookie = new Cookie("ATOKEN", null);
-//        cookie.setHttpOnly(true);
-//        cookie.setSecure(true);
-//        cookie.setPath("/");
-//        cookie.setMaxAge(0); // 즉시 만료
-//
-//        response.addCookie(cookie);
-//    }
+
+    @Operation(summary = "로그아웃", description = "로그아웃 기능 입니다.")
+    @PostMapping("/logout")
+    public void logout(HttpServletResponse response) {
+        Cookie cookie = new Cookie("ATOKEN", null);
+        cookie.setHttpOnly(true);
+        cookie.setSecure(true);
+        cookie.setPath("/");
+        cookie.setMaxAge(0); // 즉시 만료
+
+        response.addCookie(cookie);
+    }
 }
