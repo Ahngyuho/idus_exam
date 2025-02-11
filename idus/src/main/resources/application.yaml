@@ -1,0 +1,37 @@
+spring:
+  datasource:
+    master:
+      #url : ip port
+      jdbc-url: ${MASTER_DB_URL}
+      driver-class-name: org.mariadb.jdbc.Driver
+      username: ${DB_USERNAME}
+      password: ${DB_PASSWORD}
+    slave:
+      jdbc-url: ${SLAVE_DB_URL}
+      driver-class-name: org.mariadb.jdbc.Driver
+      username: ${DB_USERNAME}
+      password: ${DB_PASSWORD}
+  #    IP
+  #    PORT
+  #    URL
+  #    username
+  #    password
+  jpa:
+    hibernate:
+      #create : 서버가 실행될 때 생성한 테이블을 삭제하고 다시 생성
+      #crate-drop : 서버가 종료될 때 생성한 테이블을 삭제
+      #update : 테이블이 없으면 생성, 테이블 변경이 있을 때는 ALTER 문
+      #NONE
+      ddl-auto: update
+    database-platform: org.hibernate.dialect.MariaDBDialect
+    #DDL : CREATE, ALTER, DROL
+    #DML : SELECT, INSERT, UPDATE, DELETE
+    #DCL : GRANT, REVOKE
+    properties:
+      hibernate:
+        format_sql: true
+
+logging:
+  level:
+    org.hibernate.SQL: debug
+    org.hibernate.orm.jdbc.bind: trace
