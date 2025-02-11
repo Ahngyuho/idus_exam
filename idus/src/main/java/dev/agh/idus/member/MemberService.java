@@ -4,6 +4,9 @@ import dev.agh.idus.member.model.Member;
 import dev.agh.idus.member.model.MemberDto;
 import dev.agh.idus.order.model.OrderDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -17,9 +20,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class MemberService implements UserDetailsService {
-
     private final MemberRepository memberRepository;
-
 
     @Transactional
     public void save(Member member) {
@@ -46,8 +47,23 @@ public class MemberService implements UserDetailsService {
         return MemberDto.DetailResponse.fromEntity(member);
     }
 
+
+    @Transactional(readOnly = true)
     public List<OrderDto.OrderResponse> getMemberWithOrders(Long idx) {
         Member member = memberRepository.findByIdx(idx).orElseThrow();
         return member.getOrders().stream().map(OrderDto.OrderResponse::fromEntity).collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public Page<Member> getList(int page, int size, String username, String email) {
+        if(username == null && email == null){
+           return memberRepository.findAll(PageRequest.of(page, size));
+        }else if(username == null && email != null) {
+           return memberRepository.findAllByEmail(email,PageRequest.of(page, size));
+        } else if(username != null && email == null) {
+           return memberRepository.findAllByUsername(username,PageRequest.of(page, size));
+        } else {
+           return memberRepository.findAllByUsernameAndEmail(username, email, PageRequest.of(page, size));
+        }
     }
 }

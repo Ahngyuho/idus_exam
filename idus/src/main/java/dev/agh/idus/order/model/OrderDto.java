@@ -30,6 +30,7 @@ public class OrderDto {
         private LocalDateTime orderDate;
 
         public static OrderResponse fromEntity(Orders entity){
+            if(entity == null) return null;
             return OrderResponse.builder()
                     .productName(entity.getProductName())
                     .orderDate(entity.getOrderDate())
