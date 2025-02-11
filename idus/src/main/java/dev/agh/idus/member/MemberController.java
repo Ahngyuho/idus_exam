@@ -47,6 +47,7 @@ public class MemberController {
         return ResponseEntity.ok(PageResponse.from(memberService.getList(page, size, username, email) , MemberDto.MemberResponse::fromEntity));
     }
 
+    @Deprecated
     @Operation(summary = "로그아웃", description = "로그아웃 기능 입니다.")
     @PostMapping("/logout")
     public void logout(HttpServletResponse response) {

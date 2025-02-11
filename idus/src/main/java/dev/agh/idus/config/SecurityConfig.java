@@ -32,31 +32,32 @@ public class SecurityConfig {
     //              라이브러리를 가져와서 라이브러리의 객체를 등록할 때 사용
     @Bean
     public SecurityFilterChain configure(HttpSecurity http) throws Exception {
-        // <script>alert("asd")</script>, 일반적으로 XSS
-        // <script>게시글 작성 스크립트</script>, 일반적으로 CSRF
-        // CSRF : 크로스 사이트 요청 변조
-        http.csrf(AbstractHttpConfigurer::disable);
-        http.httpBasic(AbstractHttpConfigurer::disable);
-        http.formLogin(AbstractHttpConfigurer::disable);
+        // ❌ CSRF, HTTP Basic, Form Login, 세션 관리 비활성화 (무상태 API 방식)
+        http.csrf(AbstractHttpConfigurer::disable)
+                .httpBasic(AbstractHttpConfigurer::disable)
+                .formLogin(AbstractHttpConfigurer::disable)
+                .sessionManagement(AbstractHttpConfigurer::disable);
 
-        http.authorizeHttpRequests(
-                (auth) -> auth
-                        .requestMatchers("/login", "/member/signup","logout",
-                                "/swagger-ui/**",        // Swagger UI
-                                "/v3/api-docs/**",       // OpenAPI 문서
-                                "/swagger-resources/**", // Swagger 리소스
-                                "/webjars/**"            //
-                        )
-                        .permitAll()
-//                        .requestMatchers("/course/create").hasRole("INSTRUCTOR")
-                        .anyRequest().authenticated()
+        // ✅ 인증 예외 처리 (로그인, 회원가입, 로그아웃, Swagger UI 허용)
+        http.authorizeHttpRequests(auth -> auth
+                .requestMatchers(
+                        "/login", "/member/signup", "/logout",
+                        "/swagger-ui/**", "/v3/api-docs/**",
+                        "/swagger-resources/**", "/webjars/**"
+                ).permitAll()
+                //.requestMatchers("/course/create").hasRole("INSTRUCTOR") // 특정 권한 필요할 경우 추가
+                .anyRequest().authenticated() // 그 외 모든 요청은 인증 필요
         );
 
-        //JSESSIONID 세팅되지 않도록!
-        http.sessionManagement(AbstractHttpConfigurer::disable);
+        // ✅ 로그아웃 설정 (ATOKEN 쿠키 삭제)
+        http.logout(logout -> logout
+                .deleteCookies("ATOKEN")
+                .permitAll()
+        );
 
-        http.addFilterAt(new LoginFilter(configuration.getAuthenticationManager()), UsernamePasswordAuthenticationFilter.class);
-        http.addFilterBefore(new JwtFilter(), UsernamePasswordAuthenticationFilter.class);
+        // ✅ 커스텀 필터 추가 (로그인 & JWT 처리)
+        http.addFilterAt(new LoginFilter(configuration.getAuthenticationManager()), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JwtFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
