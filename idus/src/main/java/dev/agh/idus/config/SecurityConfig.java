@@ -41,7 +41,7 @@ public class SecurityConfig {
 
         http.authorizeHttpRequests(
                 (auth) -> auth
-                        .requestMatchers("/login", "/member/signup",
+                        .requestMatchers("/login", "/member/signup","logout",
                                 "/swagger-ui/**",        // Swagger UI
                                 "/v3/api-docs/**",       // OpenAPI 문서
                                 "/swagger-resources/**", // Swagger 리소스
