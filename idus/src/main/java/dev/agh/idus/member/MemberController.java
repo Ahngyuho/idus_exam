@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -25,7 +26,7 @@ public class MemberController {
 
     @Operation(summary = "회원 등록", description = "회원을 등록하는 기능입니다.")
     @PostMapping("/signup")
-    public void signup(@RequestBody MemberDto.SignupRequest dto) {
+    public void signup(@RequestBody @Valid MemberDto.SignupRequest dto) {
         memberService.save(dto.toEntity(passwordEncoder.encode(dto.getPassword())));
     }
 
