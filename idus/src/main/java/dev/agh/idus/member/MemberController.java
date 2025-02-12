@@ -4,6 +4,7 @@ import dev.agh.idus.member.model.MemberDto;
 import dev.agh.idus.member.model.PageResponse;
 import dev.agh.idus.order.model.OrderDto;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 
+@Tag(name = "회원 기능")
 @RestController
 @RequestMapping("/member")
 @RequiredArgsConstructor
@@ -42,9 +44,9 @@ public class MemberController {
     @Operation(summary = "여러 회원 목록 조회", description = "여러 회원 목록을 조회하는 기능입니다.")
     @GetMapping("/list")
     public ResponseEntity<PageResponse<MemberDto.MemberResponse>> list(int page, int size,
-                                                               @RequestParam(required = false) String username,
-                                                               @RequestParam(required = false) String email) {
-        return ResponseEntity.ok(PageResponse.from(memberService.getList(page, size, username, email) , MemberDto.MemberResponse::fromEntity));
+                                                                       @RequestParam(required = false) String username,
+                                                                       @RequestParam(required = false) String email) {
+        return ResponseEntity.ok(PageResponse.from(memberService.getList(page, size, username, email), MemberDto.MemberResponse::fromEntity));
     }
 
     @Deprecated
