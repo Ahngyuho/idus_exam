@@ -1,4 +1,7 @@
 spring:
+#  sql:
+#    init:
+#      mode: always
   datasource:
     master:
       #url : ip port
@@ -22,7 +25,7 @@ spring:
       #crate-drop : 서버가 종료될 때 생성한 테이블을 삭제
       #update : 테이블이 없으면 생성, 테이블 변경이 있을 때는 ALTER 문
       #NONE
-      ddl-auto: update
+      ddl-auto: none
     database-platform: org.hibernate.dialect.MariaDBDialect
     #DDL : CREATE, ALTER, DROL
     #DML : SELECT, INSERT, UPDATE, DELETE
