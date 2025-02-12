@@ -2,6 +2,7 @@ package dev.agh.idus.member.model;
 
 import dev.agh.idus.order.model.Orders;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
